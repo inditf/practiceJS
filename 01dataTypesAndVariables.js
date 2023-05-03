@@ -97,7 +97,7 @@ console.log(isNull(expNull)); // ->true
 console.log(isNull(expZero)); // ->false
 console.log(isNull(a)); // ->false
 console.log(isNull(o)); // ->false
-/**  
+/** 自测问题
     Q:JavaScript 中的数据类型有哪些？
     七种基本数据类型：Undefined、Null、Boolean、Number、String、Symbol（ES6 新增）、BigInt（ES10 新增）
     除了这七种基本数据类型之外，其他的都是对象类型，包括数组、函数、正则、日期、数学等等。
