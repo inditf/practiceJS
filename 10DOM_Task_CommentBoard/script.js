@@ -11,6 +11,7 @@ const comments = [
     comment: 'Lorem Ipsum dolor sit amet, consectetur adipiscing elit',
     time: 'Thu Jan 11 2022'
   }
+
 ];
 
 /**
@@ -18,24 +19,60 @@ const comments = [
  * @param {object[]} comments
  */
 const renderComments = (comments) => {
-  // your code here
+  const container = document.querySelector("#comments");
+  let html = '';
+  comments.forEach((com) => {
+    html += `<span class = "comments-iteam">
+    <hr/><h4><span>${com.name} </span><span class="date">${com.time}</span></h4>
+    <p>${com.comment}</p> </span >`;
+  });
+  container.insertAdjacentHTML('beforeend', html);
 }
 
 // 调用
-renderComments();
+renderComments(comments);
 
 /**
  * @description 基于comments数据，完成添加一条留言，注意安全问题
  * @param {object[]} comments
  */
 const postComment = (comments) => {
-  // your code here
+  const nameInput = document.querySelector("#name").valus;
+  console.log(nameInput);
+  const commentInput = document.querySelector("#comment").value;
+  console.log(commentInput);
+  const time = new Date().toDateString();
+  const newComment = { name: nameInput, comment: commentInput, time: time };
+  console.log(newComment);
+  //comments.unshift(newComment);
+  const newCommentSpan = document.createElement("span");
+  newCommentSpan.classList.add("comments-iteam");
+  newCommentSpan.innerHTML = `<hr/><h4><span>${newComment.name} </span> <span class="date">${newComment.time}</span></h4>
+                            <p>${newComment.comment}</p> </span >`;
+  const container = document.querySelector("#comments");
+  container.insertBefore(newCommentSpan, container.firstChild);
+
 }
-
-
+document.querySelector("button[type=submit]").addEventListener('click', postComment(comments));
 /**
  * @description 切换关闭留言和开启留言两种模式
  */
 const toggleComment = () => {
-  // your code here 
+  const nameInput = document.querySelector("#name");
+  const commentInput = document.querySelector("#comment");
+  const submitBtn = document.querySelector("button[type=submit]");
+  // const closeBtn = document.getElementsByClassName("colse");
+  const closeBtn = document.querySelector(".close");
+  if (nameInput.disabled == true) {
+    nameInput.disabled = false;
+    commentInput.disabled = false;
+    submitBtn.disabled = false;
+    closeBtn.textContent = '关闭留言';
+  }
+  else {
+    nameInput.disabled = true;
+    commentInput.disabled = true;
+    submitBtn.disabled = true;
+    closeBtn.textContent = '开启留言';
+  }
 }
