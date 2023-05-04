@@ -3,9 +3,9 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>留言板</title>
   <link rel="stylesheet" href="./style.css" />
   <script src="./script.js" defer></script>
+  <title>留言板</title>
 
 </head>
 
@@ -15,11 +15,11 @@
   <body>
     <div class="container">
       <div class="comment-box">
-        <button class="close" onclick="toggleComment()">关闭留言</button>
+        <button class="close">关闭留言</button>
         <div class="comment-form">
           <div class="header">留言板</div>
 
-          <form action="#" onsubmit="event.preventDefault(); postComment()">
+          <form action="#" onsubmit="event.preventDefault();">
             <div>
               <input type="text" id="name" placeholder="输入您的姓名..." />
             </div>

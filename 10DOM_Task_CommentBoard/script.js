@@ -37,23 +37,26 @@ renderComments(comments);
  * @param {object[]} comments
  */
 const postComment = (comments) => {
-  const nameInput = document.querySelector("#name").valus;
-  console.log(nameInput);
+  const nameInput = document.querySelector("#name").value;
+  // console.log(nameInput);
   const commentInput = document.querySelector("#comment").value;
-  console.log(commentInput);
+  // console.log(commentInput);
   const time = new Date().toDateString();
   const newComment = { name: nameInput, comment: commentInput, time: time };
-  console.log(newComment);
-  //comments.unshift(newComment);
+  comments.unshift(newComment);
+  console.log(comments);
   const newCommentSpan = document.createElement("span");
+
   newCommentSpan.classList.add("comments-iteam");
-  newCommentSpan.innerHTML = `<hr/><h4><span>${newComment.name} </span> <span class="date">${newComment.time}</span></h4>
-                            <p>${newComment.comment}</p> </span >`;
+  newCommentSpan.innerHTML = `<hr/><h4><span class="newName" > </span> 
+                            <span class="date">${newComment.time}</span></h4> 
+                            <p class ="newComment"></p></span>`;
   const container = document.querySelector("#comments");
   container.insertBefore(newCommentSpan, container.firstChild);
-
+  document.querySelector(".newName").textContent = newComment.name;
+  document.querySelector(".newComment").textContent = newComment.comment;
 }
-document.querySelector("button[type=submit]").addEventListener('click', postComment(comments));
+document.querySelector("button[type=submit]").addEventListener('click', () => postComment(comments));
 /**
  * @description 切换关闭留言和开启留言两种模式
  */
@@ -76,3 +79,4 @@ const toggleComment = () => {
     closeBtn.textContent = '开启留言';
   }
 }
+document.querySelector(".close").addEventListener('click', () => toggleComment());
