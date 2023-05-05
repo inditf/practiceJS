@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1 id="title">注册页面</h1>
+    </header>
+    <main>
+        <form id="registrationForm">
+            <table id="registration">
+                <tr>
+                    <td class="tableLeft"><label for="name" id="nameLabel">姓名</label></td>
+                    <td class="tableRight">
+                        <input type="text" id="name" placeholder="姓名" minlength="4" maxlength="16" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableLeft"><label for="password" id="passwordLabel">密码</label></td>
+                    <td class="tableRight">
+                        <input type="password" id="password" placeholder="密码" minlength="8" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableLeft"><label for="repassword" id="repasswordLabel">确认密码</label></td>
+                    <td class="tableRight">
+                        <input type="password" id="repassword" placeholder="确认密码" minlength="8" required />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableLeft"><label for="email" id="emailLabel">邮箱</label></td>
+                    <td class="tableRight"><input type="email" id="email" placeholder="邮箱" /></td>
+                </tr>
+                <tr>
+                    <td class="tableLeft"><label for="phone" id="phoneLabel">电话</label></td>
+                    <td class="tableRight"><input type="tel" id="phone" placeholder="电话" /></td>
+                </tr>
+                <tr>
+                    <td class="tableLeft"></td>
+                    <td class="tableButton"><button id="submit" type="submit">提交</button></td>
+                </tr>
+
+            </table>
+        </form>
+    </main>
+</body>
+
+
+
+
+</html>
