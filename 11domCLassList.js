@@ -32,3 +32,7 @@ function replaceClass(element, oldClassName, newClassName) {
         return false;
     }
 }
+/* Task2
+*下载 DOM_task.zip, 您将得到 sidebar.html, style.css, mian.js, helpers.js, 四个文件，保存到本地。
+ *DOM_task.zip 链接文件丢失 */
+
