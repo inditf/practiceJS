@@ -1,7 +1,7 @@
 const search = document.querySelector('#search');
 const phonebook = document.querySelector('#phonebook');
 
-search.addEventListener('input', function () {
+search.addEventListener('input', () => {
     const term = this.value.toLowerCase();
     const items = phonebook.querySelectorAll('li');
     Array.from(items).forEach(function (item) {
