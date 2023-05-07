@@ -1,5 +1,11 @@
 body {
     font-family: Arial, sans-serif;
+    /*     display: flex;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-grow: 1; */
 }
 
 #search {
