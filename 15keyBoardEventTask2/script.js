@@ -15,6 +15,7 @@ body.addEventListener('keydown', (event) => {
              */
             case 17:
                 speed = 50;
+                break;
             case 37:
                 box01.style.left = box01.offsetLeft - speed + "px";
                 break;
