@@ -2,8 +2,6 @@
 var box01 = document.querySelector("#box01");
 //设置移动速度
 var speed = 10;
-//设置移动的方向
-var dir = 0;
 
 const body = document.querySelector('body');
 body.addEventListener('keydown', (event) => {
