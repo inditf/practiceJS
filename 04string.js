@@ -149,3 +149,49 @@ console.log(isPalindromicString("aaa")); // ->true
 console.log(isPalindromicString("madam")); // ->true
 console.log(isPalindromicString("hello")); // ->false
 
+//JavaScript 的大数问题
+
+console.log("JavaScript 的大数问题");
+/**
+ * @param {string} num1
+ * @param {string} num2
+ * @return {string} 返回 num1+num2
+ **/
+function largeNumAdd(num1, num2) {
+    let result = "";
+    let carry = 0;
+    let i = num1.length - 1;
+    let j = num2.length - 1;
+    while (i >= 0 || j >= 0) {
+        let x = 0;
+        let y = 0;
+        let sum;
+        if (i >= 0) {
+            x = num1[i] - "0";
+            i--;
+        }
+        if (j >= 0) {
+            y = num2[j] - "0";
+            j--;
+        }
+        sum = x + y + carry;
+        if (sum >= 10) {
+            carry = 1;
+            sum -= 10;
+        }
+        else {
+            carry = 0;
+        }
+        result = sum + result;
+    }
+    if (carry) {
+        result = carry + result;
+    }
+    return result;
+
+}
+
+//测试用例
+console.log(largeNumAdd("11", "123"));// -> "134"
+console.log(largeNumAdd("235656", "746433225"));// -> "746668881"
+console.log(largeNumAdd("3456786543355", "222222234567778"));// -> "225679021111133"
