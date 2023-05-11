@@ -1,3 +1,9 @@
+/*
+ * @Author: YangLin 
+ * @Date: 2023-05-11 09:15:39 
+ * @Last Modified by: YangLin
+ * @Last Modified time: 2023-05-11 09:17:34
+ */
 //Task1
 console.log("Task1");
 let scores = ["88", "90", "100", "45", "60", "98", "32", "99", "80"];
@@ -158,6 +164,64 @@ console.log(matrixElements(rows)) //[2,3,5,1,2,4,8,5,5]
 //任务三
 console.log("Task3");
 //编码实现数组和对象的相互转换
+var scoreObject = {
+    Tony: {
+        Math: 95,
+        English: 79,
+        Music: 68,
+    },
+    Simon: {
+        Math: 100,
+        English: 95,
+        Music: 98,
+    },
+    Annie: {
+        Math: 54,
+        English: 65,
+        Music: 88,
+    },
+};
 
 
+//实现对象转换为数组
+function objToArr(obj) {
+    var arr = [];
+    var keys = Object.keys(obj);
+    keys.forEach(key => {
+        var temp = [];
+        temp.push(key);
+        var values = Object.values(obj[key]);
+        values.forEach(value => {
+            temp.push(value);
+        });
+        arr.push(temp);
+    });
+    return arr;
+}
+console.log(objToArr(scoreObject));
+//实现数组转换为对象
+var menuArr = [
+    [1, "Area1", -1],
+    [2, "Area2", -1],
+    [3, "Area1-1", 1],
+    [4, "Area1-2", 1],
+    [5, "Area2-1", 2],
+    [6, "Area2-2", 2],
+    [7, "Area1-2-3", 4],
+    [8, "Area2-2-1", 6],
+];
 
+//实现数组转换为对象
+function arrToObj(arr) {
+    var obj = {};
+    arr.forEach(item => {
+        var temp = {};
+        temp.id = item[0];
+        temp.name = item[1];
+        temp.parentId = item[2];
+        obj[item[0]] = temp;
+    });
+    return obj
+}
+
+console.log(arrToObj(menuArr));
