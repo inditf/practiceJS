@@ -2,7 +2,7 @@
  * @Author: YangLin 
  * @Date: 2023-05-11 09:26:30 
  * @Last Modified by: YangLin
- * @Last Modified time: 2023-05-11 09:57:21
+ * @Last Modified time: 2023-05-11 11:03:01
  */
 console.log("Task1");
 const bankAcount = {
