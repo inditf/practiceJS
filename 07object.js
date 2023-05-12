@@ -2,7 +2,7 @@
  * @Author: YangLin 
  * @Date: 2023-05-11 09:26:30 
  * @Last Modified by: YangLin
- * @Last Modified time: 2023-05-12 14:03:38
+ * @Last Modified time: 2023-05-12 14:46:37
  */
 console.log("Task1");
 const bankAcount = {
@@ -225,4 +225,6 @@ function makeAccount() {
 
 let user = makeAccount();
 
-console.log(user.ref().name); // 结果是什么？
+console.log(user.ref().name); //Amy
+
+
