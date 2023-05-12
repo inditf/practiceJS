@@ -2,7 +2,7 @@
  * @Author: YangLin 
  * @Date: 2023-05-11 09:26:30 
  * @Last Modified by: YangLin
- * @Last Modified time: 2023-05-11 11:03:01
+ * @Last Modified time: 2023-05-12 14:03:38
  */
 console.log("Task1");
 const bankAcount = {
@@ -214,13 +214,15 @@ console.log(animal.species); */
 //浅拷贝：只复制对象的第一层属性，如果属性是对象，只复制对象的引用，而不是对象的值。
 //深拷贝：复制对象的所有层级的属性，包括对象的引用和值。
 //5.下面这段代码输入什么结果？怎么将它修改正确?
-/* let makeAccount = function () {
+function makeAccount() {
     return {
         name: "Amy",
-        ref: () => {
+        ref() {
             return this;
         }
-    };
+    }
 }
+
 let user = makeAccount();
-console.log(user.ref.name); */
+
+console.log(user.ref().name); // 结果是什么？
