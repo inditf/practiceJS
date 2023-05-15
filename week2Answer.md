@@ -29,7 +29,20 @@ typeof function(){}; // "function"
 typeof []; // "object"
 typeof {}; // "object"
 ``` 
-`typeof null` 会返回 "object" —— 这是 JavaScript 编程语言的一个错误，实际上它并不是一个 object。
+`typeof null` 会返回 "object" —— 这是 JavaScript 编程语言的一个错误，实际上它并不是一个 object。  
+`typeof x`对于`Object`和`null`无法区分，可使用`Object.prototype.toString.call()`判断object类型
+```javascript
+console.log(Object.prototype.toString.call(3)); //[object Number]
+console.log(Object.prototype.toString.call(true)); //[object Boolean]
+console.log(Object.prototype.toString.call(null)); //[object Null]
+console.log(Object.prototype.toString.call('hello')); //[object String]
+console.log(Object.prototype.toString.call(undefined)); //[object Undefined]
+console.log(Object.prototype.toString.call([1, 2, 3])); //[object Array]    
+console.log(Object.prototype.toString.call({ name: 'susu', age: 3 })); //[object Object]      
+console.log(Object.prototype.toString.call(new Date())); //[object Date]
+function fn() { console.log('hello world!') };
+console.log(Object.prototype.toString.call(fn)); //[object Function]
+```
 ### Q：var let const的区别
 var、let和const都是用来声明变量的关键字。它们之间的主要区别在于`作用域`和`变量提升`。  
 1. `作用域`：var声明的变量属于函数作用域，而let和const声明的变量属于块级作用域。块级作用域是指在花括号内部的区域，例如if语句或循环语句。这意味着在使用let或const声明的变量只能在它们被定义的块级作用域内访问。  
