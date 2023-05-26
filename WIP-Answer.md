@@ -166,14 +166,136 @@
     3. C 等级：类选择器、属性选择器、伪类选择器，如 `.class、[type="text"]、:hover`
     4. D 等级：标签选择器、伪元素选择器，如 `div、:before`
 4. 元素水平垂直居中
-
+    1. 绝对定位 + 负边距
+        ```css
+        .parent {
+            position: relative;
+        }
+        .child {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+        }
+        ```
+    2. 绝对定位 + transform
+        ```css
+        .parent {
+            position: relative;
+        }
+        .child {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        ```
+    3. flex 布局
+        ```css
+        .parent {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        ```
+    4. grid 布局
+        ```css
+        .parent {
+            display: grid;
+            place-items: center;
+        }
+        ```
+    5. table 布局
+        ```css
+        .parent {
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+        }
+        ```
+    6. text-align + line-height
+        ```css
+        .parent {
+            text-align: center;
+        }
+        .child {
+            display: inline-block;
+            line-height: 100px;
+        }
+        ```
+    7. text-align + position
+        ```css
+        .parent {
+            text-align: center;
+        }
+        .child {
+            display: inline-block;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        ```
+    8. grid 布局
+        ```css
+        .parent {
+            display: grid;
+        }
+        .child {
+            align-self: center;
+            justify-self: center;
+        }
+        ```
+    9. grid 布局
+        ```css
+        .parent {
+            display: grid;
+        }
+        .child {
+            place-self: center;
+        }
+        ```
+    10. grid 布局
+        ```css
+        .parent {
+            display: grid;
+        }
+        .child {
+            grid-area: 1 / 1 / 2 / 2;
+            justify-self: center;
+            align-self: center;
+        }
+        ```
 ### 异步
-1. 说说 Event Loop
-
+1. 说说 Event Loop  
+    Event Loop 是 JavaScript 的执行机制，它是一个循环，会不断地从消息队列中取出消息并执行。  
+    Event Loop 负责执行代码、收集和处理事件以及执行排队的子任务。  
+    引擎的一般算法如下：
+    1. 当有任务时：按顺序执行它们，从最旧的任务开始。
+    2. 休眠直到出现任务，然后转到步骤 1。
 2. EventLoop JS 事件循环队列、宏任务和微任务
-
-3. Promise 都有哪些方法
-
+    1. JS 是单线程的，同一时间只能做一件事情。
+    2. JS 有一个主线程和一个任务队列。
+    3. 主线程从任务队列中取出任务并执行。
+    4. 任务队列分为宏任务队列和微任务队列。
+    5. 宏任务队列包括：script、setTimeout、setInterval、setImmediate、I/O、UI rendering。
+    6. 微任务队列包括：process.nextTick、Promise、Object.observe、MutationObserver。
+    7. 每次事件循环，主线程会从宏任务队列中取出一个任务执行，然后从微任务队列中取出所有任务执行，然后进入下一个事件循环。
+    8. 事件循环的过程是同步的，执行完一个宏任务后立即执行所有微任务，然后再执行下一个宏任务。
+    9. 事件循环的过程是异步的，宏任务和微任务的执行顺序是不确定的。
+3. Promise 都有哪些方法  
+    Promise 是 JavaScript 中的一个对象，用于表示异步操作的最终完成（或失败）及其结果值。  
+    Promise 有三种状态：pending、fulfilled、rejected。  
+    它有几个方法，包括：  
+    1.then()：用于指定当 Promise 状态变为 fulfilled 时要执行的回调函数。  
+    2.catch()：用于指定当 Promise 状态变为 rejected 时要执行的回调函数。    
+    3.finally()：用于指定无论 Promise 状态如何都要执行的回调函数。  
+    这些方法都返回一个新的 Promise 对象，因此可以链式调用。    
+    此外，Promise 还有一些静态方法，包括：  
+    1.all()：用于等待一组 Promise 对象全部完成。  
+    2.race()：用于等待一组 Promise 对象中的任意一个完成。  
+    3.resolve()：用于创建一个已经解决的 Promise 对象。  
+    4.reject()：用于创建一个已经拒绝的 Promise 对象。  
 ## 2. 看程序说结果
 ### 类型判断  
 ```js
@@ -370,5 +492,106 @@ var a=b.getelement();
 ```
 ## 3. 一起来手撕代码
 ### 1. 手写 promise.all()
+```js
+//Promise.all()方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。
+//Promise.all()方法接受一个数组（或具有 Iterator 接口）作为参数，p1、p2、p3都是 Promise 实例，如果不是，就会先调用下面讲到的Promise.resolve方法，将参数转为 Promise 实例，再进一步处理。
+//p的状态由p1、p2、p3决定，分成两种情况。
+//（1）只有p1、p2、p3的状态都变成fulfilled，p的状态才会变成fulfilled，此时p1、p2、p3的返回值组成一个数组，传递给p的回调函数。
+//（2）只要p1、p2、p3之中有一个被rejected，p的状态就变成rejected，此时第一个被reject的实例的返回值，会传递给p的回调函数。
+//Promise.all()方法的参数可以不是数组，但必须具有Iterator接口，且返回的每个成员都是 Promise 实例。
+//如果作为参数的 Promise 实例，自己定义了catch方法，那么它一旦被rejected，并不会触发Promise.all()的catch方法。
+//如果p2没有自己的catch方法，就会调用Promise.all()的catch方法。
+//Promise.all()方法的返回值也是一个 Promise 对象。
+//如果参数的不是 Promise 实例，就会先调用下面讲到的Promise.resolve()方法，将参数转为 Promise 实例，再进一步处理。
+Promise.all = function (promises) {//promises是一个promise数组
+    return new Promise((resolve, reject) => {//返回一个新的promise
+        let result = [];//存放结果
+        let count = 0;//计数器
+        for (let i = 0; i < promises.length; i++) {//遍历
+            promises[i].then((data) => {//data是每一个promise的结果
+                result[i] = data;//按顺序存放结果
+                if (++count === promises.length) {//计数器等于数组长度时，说明所有promise都执行完了
+                    resolve(result);//返回结果
+                }
+            }, (err) => {//只要有一个promise被reject，就返回reject
+                reject(err);//返回错误信息
+            })
+        }
+    })
+}
+//test
+let p1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve(1);
+    }, 1000)
+})
+let p2 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve(2);
+    }, 2000)
+})
+let p3 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve(3);
+    }, 3000)
+})
+Promise.all([p1, p2, p3]).then((data) => {
+    console.log(data);
+})//3秒后输出[1,2,3]
+```
 ### 2. 手写 Array.prototype.reduce()
+```js
+//reduce接收两个参数，一个是回调函数，一个是初始值
+//回调函数接收四个参数，分别是累计值，当前值，当前索引，原数组
+//初始值不传的话默认为数组第一个值，回调函数中可以不使用初始值
+//回调函数返回的结果会作为下一次循环的累计值
+//原数组不会被改变
+//reduce还有第二个参数，用来指定回调函数中的this
+//如果没有初始值，会从索引1开始，跳过第一个索引，直接使用第二个索引作为初始值
+//如果没有初始值，且数组只有一个元素，那么这个元素会被返回
+//如果没有初始值，且数组为空，会报错
+//如果数组为空，且有初始值，那么初始值会被返回
+//如果数组只有一个元素，且有初始值，那么这个元素会和初始值一起被返回
+//如果数组只有一个元素，且没有初始值，那么这个元素会被返回
+//如果数组有多个元素，且有初始值，那么初始值会和数组第一个元素一起作为回调函数的参数
+//如果数组有多个元素，且没有初始值，那么数组前两个元素会作为回调函数的参数
+//如果数组为空，且没有初始值，会报错
+Array.prototype.reduce = function (callback, initialValue) {
+    let arr = this;
+    let res = initialValue || arr[0];
+    let startIndex = initialValue ? 0 : 1;
+    for (let i = startIndex; i < arr.length; i++) {
+        res = callback(res, arr[i], i, arr);
+    }
+    return res;
+}
+//test
+let arr = [1, 2, 3, 4, 5];
+let res = arr.reduce((pre, cur, index, arr) => {
+    return pre + cur;
+}, 0)
+console.log(res);
+//->15
+```
 ### 3. 手写 useEffect
+```js
+//useEffect是一个函数，接收两个参数，一个是回调函数，一个是依赖数组
+//如果依赖数组为空，那么每次渲染都会执行回调函数
+//如果依赖数组不为空，那么只有依赖数组中的值发生变化时，才会执行回调函数
+//如果依赖数组不为空，且依赖数组中的值都不发生变化时，不会执行回调函数
+//如果依赖数组不为空，且依赖数组中的值有一个发生变化时，会执行回调函数
+//如果依赖数组不为空，且依赖数组中的值有多个发生变化时，会执行多次回调函数
+function useEffect(callback, depArray) {
+    const hasNoDeps = !depArray;
+    const deps = depsArray || [];
+    const hasChangedDeps = deps ? !deps.every((el, i) => el === depArray[i]) : true;
+    if (hasNoDeps || hasChangedDeps) {
+        callback();
+    }
+}
+//test
+useEffect(() => {
+    console.log('useEffect');
+}, [count])
+//count发生变化时，才会执行回调函数
+```
