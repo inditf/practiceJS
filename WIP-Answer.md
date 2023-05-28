@@ -13,40 +13,22 @@
 4. var let const 的区别  
     var、let和const都是用来声明变量的关键字。它们之间的主要区别在于`作用域`和`变量提升`。  
     1. `作用域`：var声明的变量属于函数作用域，而let和const声明的变量属于块级作用域。块级作用域是指在花括号内部的区域，例如if语句或循环语句。这意味着在使用let或const声明的变量只能在它们被定义的块级作用域内访问。  
-    2. `变量提升`：var存在变量提升现象，而let和const没有此类现象。这意味着可以在声明之前使用var声明的变量，但不能使用let或const声明的变量。
+    2. `变量提升`：var存在变量提升现象，而let和const没有此类现象。这意味着可以在声明之前使用var声明的变量，但不能使用let或const声明的变量。        
 5. 如何判断变量类型  
-    可以使用typeof运算符来判断某个值的类型。
-    `typeof x`或` typeof(x)`
-    ```javascript
-    typeof 123; // "number"
-    typeof '123'; // "string"
-    typeof true; // "boolean"
-    typeof undefined; // "undefined"
-    typeof Symbol(); // "symbol"
-    //类型为object的有：null、数组、对象、函数
-    typeof null; // "object"
-    typeof function(){}; // "function"
-    typeof []; // "object"
-    typeof {}; // "object"
-    ``` 
-    `typeof null` 会返回 "object" —— 这是 JavaScript 编程语言的一个错误，实际上它并不是一个 object。  
-    `typeof x`对于`Object`和`null`无法区分，可使用`Object.prototype.toString.call()`判断object类型
-    ```javascript
-    console.log(Object.prototype.toString.call(3)); //[object Number]
-    console.log(Object.prototype.toString.call(true)); //[object Boolean]
-    console.log(Object.prototype.toString.call(null)); //[object Null]
-    console.log(Object.prototype.toString.call('hello')); //[object String]
-    console.log(Object.prototype.toString.call(undefined)); //[object Undefined]
-    console.log(Object.prototype.toString.call([1, 2, 3])); //[object Array]    
-    console.log(Object.prototype.toString.call({ name: 'susu', age: 3 })); //[object Object]      
-    console.log(Object.prototype.toString.call(new Date())); //[object Date]
-    function fn() { console.log('hello world!') };
-    console.log(Object.prototype.toString.call(fn)); //[object Function]
-    ```
+    1. 可以使用typeof运算符来判断某个值的类型。  
+    `typeof x`或` typeof(x)`  
+    `typeof null` 会返回 `object` —— 这是个错误，实际上并不是`object`.    
+    2. `typeof x`对于`Object`和`null`无法区分，可使用`Object.prototype.toString.call()`判断`object`类型.  
+    3. `instanceof` 可用来检查一个对象是否属于某个特定的`class`,返回`true`或`false`
+        ```js
+        obj instanceof Class
+        ```
 6. 如何判断一个变量是null？
+    1. 满足`!a`为`true`且`typeof`判断为对象
+    2. `Object.prototype.toString.call()`
     ```javascript
     var a = null;
-    (!a && typeof a === "object"); //true
+    console.log((!a && typeof a === "object")); //true
     console.log(Object.prototype.toString.call(a)); //[object Null]
     ```
 7. undefined 和 null 的区别  
@@ -61,7 +43,6 @@
     console.log(typeof x); // -> object
     ```
 8. Const 定义的值一定不能改变吗？  
-    const 定义的值不能通过重新赋值（即使用赋值运算符）来更改，也不能重新声明（即通过变量声明）  
     const 声明的限制只适用于它指向的变量的引用。  
     const 变量引用的是一个对象，那么修改这个对象内部的属性并不违反 const 的限制。
 9. const 声明生成对象的时候，如何使其不可更改？  
@@ -83,7 +64,6 @@
     1. 读取函数内部的变量
     2. 让变量的值始终保持在内存中
     3. 封装对象的私有属性和私有方法  
-类是有行为的数据，闭包是有数据的行为。  
 11. 说一说箭头函数中 this 的指向  
     箭头函数中的 this 指向是固定的，在定义时就已经确定了，不会改变。  
     继承自作用域链的上一层的`this`
@@ -109,193 +89,130 @@
 12. 箭头函数可以用 call 或者 apply 改变 this 指向吗？  
     不可以，箭头函数的this指向是固定的，不会改变。
 13. bind、apply、call 的区别  
-    bind、apply、call 都是用来改变函数的 this 对象的指向的。
-    1. apply 和 call 的区别
-        1. 传参方式不同
-            ```js
-            func.call(thisArg, arg1, arg2, ...)
-            func.apply(thisArg, [argsArray])
-            ```
-            call 的参数是一个一个传递的，而 apply 的参数是以数组的形式传递的。
-        2. 对于 apply 和 call，第一个参数都是 this 的指向对象，如果我们传的第一个参数为 null，那么 this 指向的是 window 对象。
-        3. 对于 apply 和 call，如果我们传的第一个参数不是对象，那么 JavaScript 会尝试将其转换为对象。  
-            如果我们传的第一个参数是原始值，那么 JavaScript 会将原始值转换为其对应的包装对象，然后对其进行处理。  
-            如果我们传的第一个参数是一个对象，那么就直接使用这个对象。
-        4. 对于 apply 和 call，如果我们传的第一个参数是 undefined 或者 null，那么 this 指向的是 window 对象。
-        5. 对于 apply 和 call，如果我们传的第一个参数是原始值，那么 this 指向的是原始值对应的包装对象。
-        6. 对于 apply 和 call，如果我们传的第一个参数是一个对象，那么 this 指向的就是这个对象。
-    2. bind 和 apply、call 的区别
-        1. bind 返回的是一个函数，而 apply 和 call 是立即执行的。
-        2. bind 可以传入参数，而 apply 和 call 不能。
-        3. bind 返回的函数可以作为构造函数，而 apply 和 call 不能。
-
+    `bind()`、`apply()`、`call()`都是用来改变函数的`this`对象的指向的。  
+    1.  `apply`和`call`的区别  
+        `apply()`、`call()`方法功能基本一致，只是传参有些差异   
+        `apply()`方法是接受包含多个参数的数组  
+        `call()`方法是接受参数列表
+        ``` js
+        func.apply(thisArg, [argsArray])
+        func.call(thisArg, arg1, arg2, ...)
+        var array = [1, 2, 3];
+        var max = Math.max.apply(null, array); // 3
+        var max2 = Math.max.call(null, 1, 2, 3); // 3
+        ```
+    2. `bind()`和`apply()`、`call()`的区别  
+        1. `bind()`返回的是一个函数，而`apply()`和`call()`是立即执行的。  
+        2. `bind()`可以传入参数，而`apply()`和`call()`不能。  
+        ```js
+        var findMax = Math.max.bind(null);
+        console.log(findMax);//[Function: bound max]
+        console.log(findMax(1, 2, 3))//3
+        console.log(findMax(4, 5, 6))//6
+        ```
 14. 说说 new 都做了些什么
-    1. 创建一个新对象
-    2. 将构造函数的作用域赋给新对象（因此 this 就指向了这个新对象）
-    3. 执行构造函数中的代码（为这个新对象添加属性）
-    4. 返回新对象
-
+    1. 创建新的空对象并分配给 this
+    2. 函数体执行。修改 this，添加新的属性。
+    3. 返回 this 的值
+    ```js
+    function User(name) {
+    this.name = name;
+    this.isAdmin = false;
+    }
+    let user = new User("Jack");
+    //实际运行过程
+    function User(name) {
+    // 1.this = {};（隐式创建）
+    // 2.添加属性到 this
+    this.name = name;
+    this.isAdmin = false;
+    // 3.return this;（隐式返回）
+    }
+    console.log(user);
+    //->User { name: 'Jack', isAdmin: false }
+    ```
 ### CSS 部分
-1. 说说 position
+1. 说说 position  
     position 属性指定元素的定位类型。
-    1. `static`  
-        默认值，元素处于正常的文档流中。
-    2. `relative`  
-        相对定位，元素相对于其正常位置进行定位。
-    3. `absolute`  
-        绝对定位，元素相对于最近的已定位祖先元素进行定位。
-    4. `fixed`  
-        固定定位，元素相对于浏览器窗口进行定位。
-    5. `sticky`  
-        粘性定位，元素根据用户的滚动位置进行定位。
+    1. `static` 默认值 
+    元素处于正常的文档流中。  
+    2. `relative` 相对定位  
+        元素占用位置不会改变，元素相对于其正常位置进行定位。  
+    3. `absolute` 绝对定位  
+        脱离正常文档流，并不为元素预留空间，元素相对于最近的已定位祖先元素进行定位。
+    4. `fixed `固定定位  
+        脱离正常文档流，并不为元素预留空间，元素相对于浏览器窗口进行定位。  
+        元素的位置在屏幕滚动时不会改变。
+    5. `sticky` 粘性定位  
+        `relative`和`fixed`的混合体  
+        `sticky` 表现得像相对定位一样，直到它滚动到某个阈值点。  
+        常用于导航栏随，页面滚动直到特定点，粘贴在页面顶部。  
+    2-5可使用`top`,`right`,`bottom`,`left`和`z-index`调整偏移属性。
+
 2. flex 属性都有什么，其作用是什么  
+    `flex`是`FlexibleBox`的缩写，意为"弹性布局"  
     `flex`属性是`flex-grow`、`flex-shrink`和`flex-basis`的简写,用于设置弹性盒子中的弹性项目如何增长或缩小以适应可用空间。
-    1. `flex-grow`  
-        定义项目的放大比例，默认为 0，即如果存在剩余空间，也不放大。  
+    1. `flex-grow`默认为`0`  
+        定义项目的放大比例，即如果存在剩余空间，也不放大。  
         它指定了当弹性容器有多余空间时，弹性项目应该占用多少额外空间。
-    2. `flex-shrink`  
-        定义了项目的缩小比例，默认为 1，即如果空间不足，该项目将缩小。
+    2. `flex-shrink`默认为`1`  
+        定义了项目的缩小比例，即如果空间不足，该项目将缩小。  
         它指定了当弹性容器空间不足时，弹性项目应该缩小多少。    
-    3. `flex-basis`
+    3. `flex-basis`默认为`auto`  
         定义了在分配多余空间之前，项目占据的主轴空间（main size）。  
         定义初始主尺寸。它指定了在分配多余空间之前，弹性项目应该占用多少空间。
 3. CSS 优先级
-    css 优先级是由 A、B、C、D 四个等级的叠加来决定的，等级越高优先级越高，等级相同则后面的优先级高。
+    css 优先级是由`[A,B,C,D]`四个等级的叠加来决定的，等级越高优先级越高，等级相同则后面的优先级高。
     1. A 等级：内联样式，如 `style="color:red"`
     2. B 等级：ID 选择器，如 `#id`
     3. C 等级：类选择器、属性选择器、伪类选择器，如 `.class、[type="text"]、:hover`
     4. D 等级：标签选择器、伪元素选择器，如 `div、:before`
 4. 元素水平垂直居中
-    1. 绝对定位 + 负边距
+    1. 行内元素 
         ```css
-        .parent {
-            position: relative;
-        }
-        .child {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-top: -50px;
-            margin-left: -50px;
-        }
+        text-align: center;
+        line-height: height;
         ```
-    2. 绝对定位 + transform
+    2. 块级元素
         ```css
-        .parent {
-            position: relative;
-        }
-        .child {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+        margin: (父元素高度 - 元素高度)/2 px auto;
         ```
-    3. flex 布局
+    3. flex布局
         ```css
-        .parent {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
         ```
-    4. grid 布局
-        ```css
-        .parent {
-            display: grid;
-            place-items: center;
-        }
-        ```
-    5. table 布局
-        ```css
-        .parent {
-            display: table-cell;
-            text-align: center;
-            vertical-align: middle;
-        }
-        ```
-    6. text-align + line-height
-        ```css
-        .parent {
-            text-align: center;
-        }
-        .child {
-            display: inline-block;
-            line-height: 100px;
-        }
-        ```
-    7. text-align + position
-        ```css
-        .parent {
-            text-align: center;
-        }
-        .child {
-            display: inline-block;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        ```
-    8. grid 布局
-        ```css
-        .parent {
-            display: grid;
-        }
-        .child {
-            align-self: center;
-            justify-self: center;
-        }
-        ```
-    9. grid 布局
-        ```css
-        .parent {
-            display: grid;
-        }
-        .child {
-            place-self: center;
-        }
-        ```
-    10. grid 布局
-        ```css
-        .parent {
-            display: grid;
-        }
-        .child {
-            grid-area: 1 / 1 / 2 / 2;
-            justify-self: center;
-            align-self: center;
-        }
-        ```
+
+    
 ### 异步
 1. 说说 Event Loop  
     Event Loop 是 JavaScript 的执行机制，它是一个循环，会不断地从消息队列中取出消息并执行。  
     Event Loop 负责执行代码、收集和处理事件以及执行排队的子任务。  
     引擎的一般算法如下：
-    1. 当有任务时：按顺序执行它们，从最旧的任务开始。
-    2. 休眠直到出现任务，然后转到步骤 1。
-2. EventLoop JS 事件循环队列、宏任务和微任务
-    1. JS 是单线程的，同一时间只能做一件事情。
-    2. JS 有一个主线程和一个任务队列。
-    3. 主线程从任务队列中取出任务并执行。
-    4. 任务队列分为宏任务队列和微任务队列。
-    5. 宏任务队列包括：script、setTimeout、setInterval、setImmediate、I/O、UI rendering。
-    6. 微任务队列包括：process.nextTick、Promise、Object.observe、MutationObserver。
-    7. 每次事件循环，主线程会从宏任务队列中取出一个任务执行，然后从微任务队列中取出所有任务执行，然后进入下一个事件循环。
-    8. 事件循环的过程是同步的，执行完一个宏任务后立即执行所有微任务，然后再执行下一个宏任务。
-    9. 事件循环的过程是异步的，宏任务和微任务的执行顺序是不确定的。
+    1.  同步代码，调用栈执行后直接出栈
+    2.  异步代码，放到Web API中，等待时机，等合适的时候放入回调队列（callbackQueue），等到调用栈空时eventLoop开始轮询工作
+2. EventLoop JS 事件循环队列、宏任务和微任务  
+    JS 是单线程的，同一时间只能做一件事情，包括一个主线程和一个任务队列。  
+    主线程从任务队列中取出任务并执行，任务队列分为宏任务队列和微任务队列。  
+    1. 宏任务队列包括：script、setTimeout、setInterval、setImmediate、I/O、UI rendering。
+    2. 微任务队列包括：process.nextTick、Promise、Object.observe、MutationObserver。
+    3. 每次事件循环，主线程会从宏任务队列中取出一个任务执行，然后从微任务队列中取出所有任务执行，然后进入下一个事件循环。
+    4. 事件循环的过程是同步的，执行完一个宏任务后立即执行所有微任务，然后再执行下一个宏任务。
+    5. 事件循环的过程是异步的，宏任务和微任务的执行顺序是不确定的。
 3. Promise 都有哪些方法  
     Promise 是 JavaScript 中的一个对象，用于表示异步操作的最终完成（或失败）及其结果值。  
-    Promise 有三种状态：pending、fulfilled、rejected。  
+    Promise 有三种状态：`pending`、`fulfilled`、`rejected`。  
     它有几个方法，包括：  
-    1.then()：用于指定当 Promise 状态变为 fulfilled 时要执行的回调函数。  
-    2.catch()：用于指定当 Promise 状态变为 rejected 时要执行的回调函数。    
-    3.finally()：用于指定无论 Promise 状态如何都要执行的回调函数。  
-    这些方法都返回一个新的 Promise 对象，因此可以链式调用。    
-    此外，Promise 还有一些静态方法，包括：  
-    1.all()：用于等待一组 Promise 对象全部完成。  
-    2.race()：用于等待一组 Promise 对象中的任意一个完成。  
-    3.resolve()：用于创建一个已经解决的 Promise 对象。  
-    4.reject()：用于创建一个已经拒绝的 Promise 对象。  
+    1. `then()`：用于指定当`Promise`状态变为`fulfilled`时要执行的回调函数。  
+    2. `catch()`：用于指定当`Promise`状态变为`rejected`时要执行的回调函数。    
+    3. `finally()`：用于指定无论`Promise`状态如何都要执行的回调函数。  
+    这些方法都返回一个新的`Promise`对象，因此可以链式调用。  
+    此外`Promise`还有一些静态方法，包括：  
+    4. `all()`：用于等待一组`Promise`对象全部完成。  
+    5. `race()`：用于等待一组`Promise`对象中的任意一个完成。  
+    6. `resolve()`：用于创建一个已经解决的`Promise`对象。  
+    7. `reject()`：用于创建一个已经拒绝的`Promise`对象。  
 ## 2. 看程序说结果
 ### 类型判断  
 ```js
