@@ -9,11 +9,50 @@
     2. `Symbol`表示唯一标识符,通常用于向对象添加唯一属性。
 3. 说一说基本类型和引用类型的区别  
     1. 基础数据类型：在存储时变量中存储的是值本身，占用空间固定，保存在栈中；  
-    2. 引用数据类型：在存储时变量中存储的是地址，占用空间不固定，保存在堆中；  
+    2. 引用数据类型：在存储时变量中存储的是地址，占用空间不固定，保存在堆中；
+
+    栈(stack)：自动分配相对固定大小的内存空间，并由系统自动释放，栈数据结构遵循`FILO`（first in last out）先进后出的原则。  
+    堆(heap)：动态分配内存，内存大小不固定，也不会自动释放，堆数据结构是一种无序的树状结构  
+
+    基本数据类型和引用数据类型在赋值时也有区别
+    1.  基本数据类型在赋值时，会复制一个新变量
+    2.  引用数据类型在赋值时，会存在浅拷贝现象，复制的是引用地址，对新变量所做的任何更改都会影响原始值  
+    ```js
+    //浅拷贝
+    let obj1 = {x: 1};
+    let obj2 = obj1;
+    obj2.x = 2;
+    console.log(obj1.x); // 输出2
+    //深拷贝 1.JSON.parse(JSON.stringify(obj))
+    let obj1 = {x: 1};
+    let obj2 = JSON.parse(JSON.stringify(obj1));
+    obj2.x = 2;
+    console.log(obj1.x); // 输出1
+    //深拷贝 2.遍历对象
+    function deepCopy(obj) {
+        let newObj = Array.isArray(obj) ? [] : {};
+        for (let key in obj) {
+            newObj[key] = deepCopy(obj[key]);
+        }
+        return newObj;
+    }
+    let obj1 = { x: 1 };
+    let obj2 = deepCopy(obj1);
+    obj2.x = 3;
+    console.log(obj1.x); // 输出1
+    ```
+
 4. var let const 的区别  
     var、let和const都是用来声明变量的关键字。它们之间的主要区别在于`作用域`和`变量提升`。  
     1. `作用域`：var声明的变量属于函数作用域，而let和const声明的变量属于块级作用域。块级作用域是指在花括号内部的区域，例如if语句或循环语句。这意味着在使用let或const声明的变量只能在它们被定义的块级作用域内访问。  
-    2. `变量提升`：var存在变量提升现象，而let和const没有此类现象。这意味着可以在声明之前使用var声明的变量，但不能使用let或const声明的变量。        
+    2. `变量提升`：var存在变量提升现象，而let和const没有此类现象。这意味着可以在声明之前使用var声明的变量，但不能使用let或const声明的变量。  
+
+        |             |重复定义     |修改数值     |变量提升    |块级作用域   |
+        | ----------- |----------- |----------- |----------- |----------- |
+        | var         |可以        |可以         |存在        |仅函数内可用  |
+        | let         |不可以      |可以         |不存在       |存在          |
+        | const       |不可以      |不可以       |不存在       |存在          |
+
 5. 如何判断变量类型  
     1. 可以使用typeof运算符来判断某个值的类型。  
     `typeof x`或` typeof(x)`  
@@ -26,10 +65,12 @@
 6. 如何判断一个变量是null？
     1. 满足`!a`为`true`且`typeof`判断为对象
     2. `Object.prototype.toString.call()`
+    3. "`===`"严格相等运算符,检查两个操作数是否相等，返回`true` `false`
     ```javascript
-    var a = null;
+    const a = null;
     console.log((!a && typeof a === "object")); //true
     console.log(Object.prototype.toString.call(a)); //[object Null]
+    console.log(a === null)//true
     ```
 7. undefined 和 null 的区别  
     `undefined`和`null`都表示值的缺失  
@@ -84,9 +125,11 @@
         ```
     2. `bind()`和`apply()`、`call()`的区别  
         1. `bind()`返回的是一个函数，而`apply()`和`call()`是立即执行的。  
-        2. `bind()`可以传入参数，而`apply()`和`call()`不能。  
+        2. `bind()`可以传入参数，而`apply()`和`call()`不能。
+        3. `bind()` 是硬绑定，一旦绑定一个对象之后，`this`指向就不会改变了  
         ```js
-        var findMax = Math.max.bind(null);
+        array=[1,2,3]
+        var findMax = Math.max.bind(array);
         console.log(findMax);//[Function: bound max]
         console.log(findMax(1, 2, 3))//3
         console.log(findMax(4, 5, 6))//6
@@ -161,18 +204,64 @@
         ```css
         margin: (父元素高度 - 元素高度)/2 px auto;
         ```
-    3. flex布局
+        伪元素:垂直居中
+        ```css
+        .parent {
+            background: #ccc;
+            height: 200px;
+        }
+        .son{
+            width: 50px;
+            height: 50px;
+            background: pink;
+        }
+        .parent::after, .son{
+            display:inline-block;
+            vertical-align:middle;
+         }
+        .parent::after{
+            content:'';
+            height:100%;
+        }
+        ```
+    3. table-cell表格布局
+        ```CSS
+        .parent {
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        }
+        .children {
+        display: inline-block;
+        }
+        ```
+    4. flex布局    
         ```css
         display: flex;
         justify-content: center;
         align-items: center;
         ```
-
+    5. position:`absolute`
+        ```css
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        ```
+         ```css
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        ```
     
 ### 异步
 1. 说说 Event Loop  
-    `Event Loop`是`JavaScript`的执行机制，它是一个循环，会不断地从消息队列中取出消息并执行。  
+    `JavaScript`是一种单线程语言，因为它只有一个调用堆栈用于执行程序。在设计是为了处理单个用户在单个网页的需求，消除了设计多线程需求。  
     `Event Loop`负责执行代码、收集和处理事件以及执行排队的子任务，用于浏览器或Node解决单线程运行时不会阻塞的一种机制。   
+    `Event Loop`是`JavaScript`的执行机制，它是一个循环，会不断地从消息队列中取出消息并执行。
     引擎的一般算法如下：
     1.  同步代码，调用栈执行后直接出栈
     2.  异步代码，放到Web API中，等待时机，等合适的时候放入回调队列，等到调用栈空时,`EventLoop`开始工作，读取到栈内等待主线程的执行。
