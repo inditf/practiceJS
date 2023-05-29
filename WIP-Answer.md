@@ -2,7 +2,7 @@
 ## 1. 简答
 ### JS 部分
 1. JavaScript 有哪些数据类型？  
-     八种基本的数据类型  
+     八种数据类型  
     `1.`Number`2.`BigInt`3.`String`4.`Boolean`5.`Undefined`6.`Null`7.`Symbol`8.`Object
 2. Symbol 和 Bigint 简单介绍
     1. `BigInt`可以表示任意大小的整数，以安全地存储和操作大整数，甚至超出了数字的安全整数限制（`Number.MAX_SAFE_INTEGER`）。
@@ -67,25 +67,6 @@
 11. 说一说箭头函数中 this 的指向  
     箭头函数中的 this 指向是固定的，在定义时就已经确定了，不会改变。  
     继承自作用域链的上一层的`this`
-    ```js
-    var obj = {
-        id: 'OBJ',
-        a: function () {
-            console.log(this.id);//'OBJ'
-            fn= () => {
-                console.log(this.id);//'OBJ'
-            };
-            fn();
-        },
-        b: () => {
-            console.log(this.id);//'undefined'
-        }
-    };
-    obj.a();    // 'OBJ' 'OBJ'
-    obj.b();    // 'undefined'
-    ``` 
-    `obj.a`中的`this`指向`obj`，`fn`中的`this`指向`a`，所以`fn`中的`this`指向`obj`。  
-    `obj.b`中的`this`指向全局对象，所以`this.id`为`undefined`。
 12. 箭头函数可以用 call 或者 apply 改变 this 指向吗？  
     不可以，箭头函数的this指向是固定的，不会改变。
 13. bind、apply、call 的区别  
@@ -120,7 +101,10 @@
     this.isAdmin = false;
     }
     let user = new User("Jack");
-    //实际运行过程
+    console.log(user);
+    //->User { name: 'Jack', isAdmin: false }
+
+    //new实际运行过程
     function User(name) {
     // 1.this = {};（隐式创建）
     // 2.添加属性到 this
@@ -128,8 +112,7 @@
     this.isAdmin = false;
     // 3.return this;（隐式返回）
     }
-    console.log(user);
-    //->User { name: 'Jack', isAdmin: false }
+
     ```
 ### CSS 部分
 1. 说说 position  
@@ -161,12 +144,13 @@
     3. `flex-basis`默认为`auto`  
         定义了在分配多余空间之前，项目占据的主轴空间（main size）。  
         定义初始主尺寸。它指定了在分配多余空间之前，弹性项目应该占用多少空间。
-3. CSS 优先级
+3. CSS 优先级  
     css 优先级是由`[A,B,C,D]`四个等级的叠加来决定的，等级越高优先级越高，等级相同则后面的优先级高。
     1. A 等级：内联样式，如 `style="color:red"`
     2. B 等级：ID 选择器，如 `#id`
     3. C 等级：类选择器、属性选择器、伪类选择器，如 `.class、[type="text"]、:hover`
     4. D 等级：标签选择器、伪元素选择器，如 `div、:before`
+    5. `!important` 优先级最高
 4. 元素水平垂直居中
     1. 行内元素 
         ```css
@@ -187,32 +171,61 @@
     
 ### 异步
 1. 说说 Event Loop  
-    Event Loop 是 JavaScript 的执行机制，它是一个循环，会不断地从消息队列中取出消息并执行。  
-    Event Loop 负责执行代码、收集和处理事件以及执行排队的子任务。  
+    `Event Loop`是`JavaScript`的执行机制，它是一个循环，会不断地从消息队列中取出消息并执行。  
+    `Event Loop`负责执行代码、收集和处理事件以及执行排队的子任务，用于浏览器或Node解决单线程运行时不会阻塞的一种机制。   
     引擎的一般算法如下：
     1.  同步代码，调用栈执行后直接出栈
-    2.  异步代码，放到Web API中，等待时机，等合适的时候放入回调队列（callbackQueue），等到调用栈空时eventLoop开始轮询工作
+    2.  异步代码，放到Web API中，等待时机，等合适的时候放入回调队列，等到调用栈空时,`EventLoop`开始工作，读取到栈内等待主线程的执行。
 2. EventLoop JS 事件循环队列、宏任务和微任务  
-    JS 是单线程的，同一时间只能做一件事情，包括一个主线程和一个任务队列。  
-    主线程从任务队列中取出任务并执行，任务队列分为宏任务队列和微任务队列。  
-    1. 宏任务队列包括：script、setTimeout、setInterval、setImmediate、I/O、UI rendering。
-    2. 微任务队列包括：process.nextTick、Promise、Object.observe、MutationObserver。
-    3. 每次事件循环，主线程会从宏任务队列中取出一个任务执行，然后从微任务队列中取出所有任务执行，然后进入下一个事件循环。
-    4. 事件循环的过程是同步的，执行完一个宏任务后立即执行所有微任务，然后再执行下一个宏任务。
-    5. 事件循环的过程是异步的，宏任务和微任务的执行顺序是不确定的。
+    JS有一个`main thread`主线程和`call-stack`调用栈(执行栈)，所有的任务都会被放到调用栈等待主线程执行。   
+    主线程从任务队列中取出任务并执行，异步任务队列分为宏任务队列和微任务队列。  
+    1. 宏任务队列包括：`整体script`、`setTimeout`、`setInterval`、`setImmediate`、`DOM/IO`。
+    2. 微任务队列包括：`原生Promise then() catch() `、`await 暂停语句`、`process.nextTick`、`MutationObserver`。
+    3. 事件循环的过程是同步的，每一次宏任务执行前，要清空上一次的微任务队列，微任务在宏任务之前执行，在当前的微任务队列没有执行完成时，是不会执行下一个宏任务的。
+    4. `EventLoop`保证按照主线程-微任务队列-宏任务的顺序不断重复执行, 并始终维护各执行队列直至全部队列清空。
+    ```js
+    console.log('script start'); //1.
+    setTimeout(() => {
+       console.log('setTimeout');//6.
+    }, 0);
+    new Promise((resolve, reject) => {
+       console.log('promise resolve');//2.
+       resolve()
+    }
+    ).then(() => {
+       console.log('promise1');//4.
+    }).then(() => {
+       console.log('promise2');//5.
+    });
+    console.log('script end');//3.
+    ```
+    同步代码  
+    1.`script start`  
+    2.`promise resolve` ->注册微任务  
+    3.`script end`   
+    微任务队列   
+    4.`promise1`  
+    5.`promise2`  
+    宏任务    
+    6.`setTimeout`  
 3. Promise 都有哪些方法  
     Promise 是 JavaScript 中的一个对象，用于表示异步操作的最终完成（或失败）及其结果值。  
     Promise 有三种状态：`pending`、`fulfilled`、`rejected`。  
-    它有几个方法，包括：  
-    1. `then()`：用于指定当`Promise`状态变为`fulfilled`时要执行的回调函数。  
-    2. `catch()`：用于指定当`Promise`状态变为`rejected`时要执行的回调函数。    
-    3. `finally()`：用于指定无论`Promise`状态如何都要执行的回调函数。  
-    这些方法都返回一个新的`Promise`对象，因此可以链式调用。  
-    此外`Promise`还有一些静态方法，包括：  
-    4. `all()`：用于等待一组`Promise`对象全部完成。  
-    5. `race()`：用于等待一组`Promise`对象中的任意一个完成。  
-    6. `resolve()`：用于创建一个已经解决的`Promise`对象。  
-    7. `reject()`：用于创建一个已经拒绝的`Promise`对象。  
+    它有三种实例方法，这些方法都返回一个新的`Promise`对象，因此可以链式调用,包括：  
+      
+    1. `Promise.prototype.then()`：用于指定当`Promise`状态变为`fulfilled`时要执行的回调函数。  
+    2. `Promise.prototype.catch()`：用于指定当`Promise`状态变为`rejected`时要执行的回调函数。    
+    3. `Promise.prototype.finally()`：用于指定无论`Promise`状态如何都要执行的回调函数。  
+
+    此外`Promise`还有一些静态方法，包括:  
+
+    4. `Promise.all()`：用于等待一组`Promise`对象全部完成。  
+    5. `Promise.race()`：用于等待一组`Promise`对象中的任意一个完成。  
+    6. `Promise.resolve()`：用于创建一个已经解决的`Promise`对象。  
+    7. `Promise.reject()`：用于创建一个已经拒绝的`Promise`对象。  
+    8. `Promise.allSettled()`:用于返回一个在所有给定的`Promise`都已完成或拒绝后完成的`Promise`
+    9. `Promise.any()`:用于返回任意一个最快执行已经解决的`Promise` 实例。
+
 ## 2. 看程序说结果
 ### 类型判断  
 ```js
@@ -410,69 +423,49 @@ var a=b.getelement();
 ## 3. 一起来手撕代码
 ### 1. 手写 promise.all()
 ```js
-//Promise.all()方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。
-//Promise.all()方法接受一个数组（或具有 Iterator 接口）作为参数，p1、p2、p3都是 Promise 实例，如果不是，就会先调用下面讲到的Promise.resolve方法，将参数转为 Promise 实例，再进一步处理。
-//p的状态由p1、p2、p3决定，分成两种情况。
-//（1）只有p1、p2、p3的状态都变成fulfilled，p的状态才会变成fulfilled，此时p1、p2、p3的返回值组成一个数组，传递给p的回调函数。
-//（2）只要p1、p2、p3之中有一个被rejected，p的状态就变成rejected，此时第一个被reject的实例的返回值，会传递给p的回调函数。
-//Promise.all()方法的参数可以不是数组，但必须具有Iterator接口，且返回的每个成员都是 Promise 实例。
-//如果作为参数的 Promise 实例，自己定义了catch方法，那么它一旦被rejected，并不会触发Promise.all()的catch方法。
-//如果p2没有自己的catch方法，就会调用Promise.all()的catch方法。
-//Promise.all()方法的返回值也是一个 Promise 对象。
-//如果参数的不是 Promise 实例，就会先调用下面讲到的Promise.resolve()方法，将参数转为 Promise 实例，再进一步处理。
-Promise.all = function (promises) {//promises是一个promise数组
-    return new Promise((resolve, reject) => {//返回一个新的promise
-        let result = [];//存放结果
-        let count = 0;//计数器
-        for (let i = 0; i < promises.length; i++) {//遍历
-            promises[i].then((data) => {//data是每一个promise的结果
-                result[i] = data;//按顺序存放结果
-                if (++count === promises.length) {//计数器等于数组长度时，说明所有promise都执行完了
-                    resolve(result);//返回结果
-                }
-            }, (err) => {//只要有一个promise被reject，就返回reject
-                reject(err);//返回错误信息
-            })
+function PromiseAll(promiseArray) {    //返回一个Promise对象
+    return new Promise((resolve, reject) => {//Promise的构造函数接收一个函数作为参数，该函数的两个参数分别是resolve和reject。
+        if (!Array.isArray(promiseArray)) {                        //传入的参数是否为数组
+            return reject(new Error('传入的参数不是数组！'))    //不是数组，返回reject状态
         }
+        const res = []  //用于存放每个Promise对象的返回结果
+        let counter = 0;                        //设置一个计数器，用于判断所有的Promise是否都执行完毕
+        promiseArray.forEach((p, i) => {    //遍历传入的Promise数组
+            Promise.resolve(p).then(value => {//将数组中的每个Promise对象都用Promise.resolve()包装一下，使其变成一个Promise对象
+                //调用then方法,将每个Promise对象的返回结果存放到res数组中
+                counter++;                 //每个Promise执行完毕，计数器加1
+                res[i] = value//将执行完毕的Promise对象的返回结果存放到res数组中对应的位置
+                if (counter === promiseArray.length) {
+                    resolve(res)    //当所有的Promise都执行完毕时，返回resolve状态,并将res数组作为参数传递出去
+                }
+            }).catch(e => reject(e))    //只要有一个Promise执行失败，就返回reject状态,并将失败的原因返回
+        })
     })
 }
-//test
-let p1 = new Promise((resolve, reject) => {
+const p1 = new Promise((res, rej) => {
     setTimeout(() => {
-        resolve(1);
+        res('p1')
     }, 1000)
 })
-let p2 = new Promise((resolve, reject) => {
+const p2 = new Promise((res, rej) => {
     setTimeout(() => {
-        resolve(2);
+        res('p2')
     }, 2000)
 })
-let p3 = new Promise((resolve, reject) => {
+const p3 = new Promise((res, rej) => {
     setTimeout(() => {
-        resolve(3);
+        res('p3')
     }, 3000)
 })
-Promise.all([p1, p2, p3]).then((data) => {
-    console.log(data);
-})//3秒后输出[1,2,3]
+const test = PromiseAll([p1, p2, p3])
+    .then(res => console.log(res))
+    .catch(e => console.log(e))
+console.log(test);
+// Promise { <pending> }
+// [ 'p1', 'p2', 'p3' ]
 ```
 ### 2. 手写 Array.prototype.reduce()
 ```js
-//reduce接收两个参数，一个是回调函数，一个是初始值
-//回调函数接收四个参数，分别是累计值，当前值，当前索引，原数组
-//初始值不传的话默认为数组第一个值，回调函数中可以不使用初始值
-//回调函数返回的结果会作为下一次循环的累计值
-//原数组不会被改变
-//reduce还有第二个参数，用来指定回调函数中的this
-//如果没有初始值，会从索引1开始，跳过第一个索引，直接使用第二个索引作为初始值
-//如果没有初始值，且数组只有一个元素，那么这个元素会被返回
-//如果没有初始值，且数组为空，会报错
-//如果数组为空，且有初始值，那么初始值会被返回
-//如果数组只有一个元素，且有初始值，那么这个元素会和初始值一起被返回
-//如果数组只有一个元素，且没有初始值，那么这个元素会被返回
-//如果数组有多个元素，且有初始值，那么初始值会和数组第一个元素一起作为回调函数的参数
-//如果数组有多个元素，且没有初始值，那么数组前两个元素会作为回调函数的参数
-//如果数组为空，且没有初始值，会报错
 Array.prototype.reduce = function (callback, initialValue) {
     let arr = this;
     let res = initialValue || arr[0];
@@ -492,12 +485,6 @@ console.log(res);
 ```
 ### 3. 手写 useEffect
 ```js
-//useEffect是一个函数，接收两个参数，一个是回调函数，一个是依赖数组
-//如果依赖数组为空，那么每次渲染都会执行回调函数
-//如果依赖数组不为空，那么只有依赖数组中的值发生变化时，才会执行回调函数
-//如果依赖数组不为空，且依赖数组中的值都不发生变化时，不会执行回调函数
-//如果依赖数组不为空，且依赖数组中的值有一个发生变化时，会执行回调函数
-//如果依赖数组不为空，且依赖数组中的值有多个发生变化时，会执行多次回调函数
 function useEffect(callback, depArray) {
     const hasNoDeps = !depArray;
     const deps = depsArray || [];
