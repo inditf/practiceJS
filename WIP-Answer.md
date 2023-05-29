@@ -511,6 +511,11 @@ var a=b.getelement();
 ```
 ## 3. 一起来手撕代码
 ### 1. 手写 promise.all()
+Promise 是异步编程的一种解决方案,用于解决回调地狱，避免了层层嵌套的回调函数。  
+`Promise.all()`方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。  
+`Promise.resolve()`方法将现有对象转为 Promise 对象。   
+`Promise.reject()`方法也会返回一个新的 Promise 实例，该实例的状态为rejected。    
+`Promise.then()`方法返回一个新的 Promise 实例，因此可以采用链式写法，即`then`方法后面再调用另一个`then`方法。
 ```js
 function PromiseAll(promiseArray) {    //返回一个Promise对象
     return new Promise((resolve, reject) => {//Promise的构造函数接收一个函数作为参数，该函数的两个参数分别是resolve和reject。
@@ -553,16 +558,23 @@ console.log(test);
 // Promise { <pending> }
 // [ 'p1', 'p2', 'p3' ]
 ```
-### 2. 手写 Array.prototype.reduce()
+### 2. 手写 Array.prototype.reduce()  
+`Array.prototype.reduce()`方法对数组中的每个元素按序执行一个提供的`reduce`函数，每一次运行 `reduce`会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。  
 ```js
 Array.prototype.reduce = function (callback, initialValue) {
-    let arr = this;
-    let res = initialValue || arr[0];
-    let startIndex = initialValue ? 0 : 1;
-    for (let i = startIndex; i < arr.length; i++) {
-        res = callback(res, arr[i], i, arr);
-    }
-    return res;
+  // 获取调用 reduce 方法的数组
+  let arr = this;
+  // 如果提供了初始值，则将 res 设为初始值，否则将 res 设为数组的第一个元素
+  let res = initialValue || arr[0];
+  // 如果提供了初始值，则从数组的第一个元素开始遍历，否则从第二个元素开始遍历
+  let startIndex = initialValue ? 0 : 1;
+  // 遍历数组中的每个元素
+  for (let i = startIndex; i < arr.length; i++) {
+    // 调用回调函数，传入当前累加器的值、当前元素、当前索引和原数组
+    res = callback(res, arr[i], i, arr);
+  }
+  // 返回累加器的最终值
+  return res;
 }
 //test
 let arr = [1, 2, 3, 4, 5];
@@ -573,11 +585,14 @@ console.log(res);
 //->15
 ```
 ### 3. 手写 useEffect
+`useEffect()`是`React hooks`运行基础，用于处理副作用(不涉及计算的操作 比如生成日志、储存数据、改变应用状态等等)  
+`useEffect()`在依赖变化时，执行回调函数。
 ```js
 function useEffect(callback, depArray) {
-    const hasNoDeps = !depArray;
-    const deps = depsArray || [];
+    const hasNoDeps = !depArray;  // 检查是否提供了依赖数组
+    const deps = depArray || [];  // 如果没有提供依赖数组，则使用空数组
     const hasChangedDeps = deps ? !deps.every((el, i) => el === depArray[i]) : true;
+    // 如果没有提供依赖数组或依赖数组中的元素发生了变化，则执行回调函数
     if (hasNoDeps || hasChangedDeps) {
         callback();
     }
